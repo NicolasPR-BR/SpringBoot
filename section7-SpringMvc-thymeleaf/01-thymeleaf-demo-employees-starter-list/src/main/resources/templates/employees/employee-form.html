@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
   <div class="container">
@@ -16,7 +17,6 @@
       <!-- By hiding this, and sending the id, we'll be telling the database to update, not create, because an ID already exists -->
       <!-- if the id is equal to 0 a new entry to the database will be made -->
     <input type="hidden" th:field="*{id}"/>
-
     <input type="text" th:field="*{firstName}" class="form-control mb-4 w-25" placeholder="First Name"/>
     <input type="text" th:field="*{lastName}" class="form-control mb-4 w-25" placeholder="Last Name"/>
     <input type="email" th:field="*{email}" class="form-control mb-4 w-25" placeholder="Email"/>
