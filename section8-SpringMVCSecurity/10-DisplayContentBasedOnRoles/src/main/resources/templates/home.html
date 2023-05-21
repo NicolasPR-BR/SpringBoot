@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+    <h2>Home of the application</h2>
+    <hr>
+
+    <p>
+    Welcome to the home of the application
+    </p>
+    <!-- Display users and passwords -->
+    <hr>
+        User: <span sec:authentication="principal.username"></span>
+        <br><br>
+        Role(s): <span sec:authentication="principal.authorities"></span>
+    <hr>
+    <br>
+
+    <!-- Comments were added into the <p> so they won't show in the final HTML-->
+
+    <p sec:authorize="hasRole('MANAGER')">
+        <!-- Add a link to /leaders, this is only for the managers-->
+        <!-- Only authorizes if user has role MANAGER-->
+        <a th:href="@{/leaders}">Leadership meeting (Only for managers)</a>
+    </p>
+
+
+    <p sec:authorize="hasRole('ADMIN')">
+        <!-- Only authorizes if user has role ADMIN-->
+        <a th:href="@{/systems}">IT Systems meeting (Only for admins)</a>
+    </p>
+
+    <form action="#" th:action="@{/logout}" METHOD="POST">
+        <input type="submit" value="Logout"></input>
+    </form>
+
+</body>
+</html>
