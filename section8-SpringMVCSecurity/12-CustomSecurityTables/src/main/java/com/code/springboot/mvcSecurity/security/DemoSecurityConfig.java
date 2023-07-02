@@ -6,34 +6,27 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class DemoSecurityConfig {
-    // In memory database, just so we have some data to play with
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager(){
-            UserDetails john = User.builder()
-                    .username("john")
-                    .password("{noop}test123") //Password has no encryption, so noop "no operation"
-                    .roles("EMPLOYEE") //John only has 1 role, and it's employee
-                    .build();
+    public UserDetailsManager userDetailsManager(DataSource dataSource){
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 
-            UserDetails mary = User.builder()
-                    .username("mary")
-                    .password("{noop}test123")
-                    .roles("EMPLOYEE", "MANAGER") //Mary's also a manager, so she has "MANAGER"
-                    .build();
+        //Retrieves user by username
+        jdbcUserDetailsManager.setUsersByUsernameQuery("SELECT user_id, pw, active FROM members WHERE user_id=?");
 
-            UserDetails susan = User.builder()
-                    .username("susan")
-                    .password("{noop}test123")
-                    .roles("EMPLOYEE", "MANAGER", "ADMIN") //Susan's also an ADMIN
-                    .build();
+        //Define query to retrieve the authorities by username
+        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("SELECT user_id, role FROM roles WHERE user_id=?");
 
-        return new InMemoryUserDetailsManager(john, mary, susan);
+        return jdbcUserDetailsManager;
     }
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Restrict access based on the HTTP request
